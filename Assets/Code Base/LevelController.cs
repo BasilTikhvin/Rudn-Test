@@ -1,36 +1,39 @@
 using UnityEngine;
+using UnityEngine.Events;
 using Zenject;
 
 namespace RudnTest
 {
     public class LevelController : MonoBehaviour
     {
+        public event UnityAction OnLevelPassed;
+
         [SerializeField] int _resourceRequired;
 
         DumpSite _dumpSite;
-        Character _playerCharacter;
 
         [Inject]
-        public void Construct(DumpSite dumpSite, Character playerCharacter)
+        public void Construct(DumpSite dumpSite)
         {
             _dumpSite = dumpSite;
-            _playerCharacter = playerCharacter;
         }
 
         private void OnEnable()
         {
-            _dumpSite.ResourceChange += ResourceChange;
+            _dumpSite.OnResourceAmountChange += OnResourceAmountChange;
+
+            Cursor.visible = false;
         }
 
         private void OnDestroy()
         {
-            _dumpSite.ResourceChange -= ResourceChange;
+            _dumpSite.OnResourceAmountChange -= OnResourceAmountChange;
         }
 
-        private void ResourceChange(int amount)
+        private void OnResourceAmountChange(int amount)
         {
             if (amount >= _resourceRequired)
-                _playerCharacter.CharacterInput.DisableInput();
+                OnLevelPassed?.Invoke();
         }
     }
 }

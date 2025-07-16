@@ -12,7 +12,7 @@ namespace RudnTest
             ResourceAmount += 1;
         }
 
-        public void RemoveResource()
+        public void RemoveAllResources()
         {
             ResourceAmount = 0;
         }

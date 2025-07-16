@@ -18,5 +18,10 @@ namespace RudnTest
         {
             transform.Rotate(0f, _rotationSpeed * Time.deltaTime, 0f);
         }
+
+        public void DestroyResource()
+        {
+            Destroy(gameObject);
+        }
     }
 }

@@ -1,27 +1,42 @@
+using System;
 using UnityEngine;
+using Zenject;
 
 namespace RudnTest
 {
+    [Serializable]
     public class CharacterInput : MonoBehaviour
     {
-        public Vector3 Direction { get; private set; }
+        public Vector3 MoveDirection { get; private set; }
         public float Rotation { get; private set; }
 
-        private void Update()
+        LevelController _levelController;
+
+        [Inject]
+        public void Construct(LevelController levelController)
+        {
+            _levelController = levelController;
+        }
+
+        private void OnEnable()
+        {
+            _levelController.OnLevelPassed += OnLevelPassed;
+        }
+
+        public void Update()
         {
             MoveDirectionInput();
             LookRotation();
         }
 
-        public void DisableInput()
+        private void OnDestroy()
         {
-            ResetInput();
-            enabled = false;
+            _levelController.OnLevelPassed -= OnLevelPassed;
         }
 
         private void MoveDirectionInput()
         {
-            Direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
+            MoveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         }
 
         private void LookRotation()
@@ -29,9 +44,11 @@ namespace RudnTest
             Rotation = Input.GetAxis("Mouse X");
         }
 
-        private void ResetInput()
+        private void OnLevelPassed()
         {
-            Direction = Vector3.zero;
+            enabled = false;
+
+            MoveDirection = Vector3.zero;
             Rotation = 0f;
         }
     }

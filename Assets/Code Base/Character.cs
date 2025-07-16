@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 namespace RudnTest
 {
@@ -7,28 +8,34 @@ namespace RudnTest
         [SerializeField] float _moveSpeed;
         [SerializeField] float _rotationSpeed;
         [SerializeField] float _pickupRadius;
+        [SerializeField] float _pickupOffsetY;
 
         public CharacterInput CharacterInput { get; private set; }
         public Bag Bag { get; private set; }
 
+        [Inject]
+        public void Construct(CharacterInput characterInput, Bag bag)
+        {
+            CharacterInput = characterInput;
+            Bag = bag;
+        }
+
         float _rotation;
 
-        private void Awake()
+        private void FixedUpdate()
         {
-            CharacterInput = GetComponentInChildren<CharacterInput>();
-            Bag = new Bag();
+            OverlapCollision();
         }
 
         private void Update()
         {
             Move();
             Rotate();
-            OverlapCollision();
         }
 
         private void Move()
         {
-            transform.Translate(CharacterInput.Direction.normalized * _moveSpeed * Time.deltaTime);
+            transform.Translate(CharacterInput.MoveDirection.normalized * _moveSpeed * Time.deltaTime);
         }
 
         private void Rotate()
@@ -39,14 +46,14 @@ namespace RudnTest
 
         private void OverlapCollision()
         {
-            Collider[] hits = Physics.OverlapSphere(transform.position, _pickupRadius);
+            Collider[] hits = Physics.OverlapSphere(transform.position + (Vector3.up * _pickupOffsetY), _pickupRadius);
 
             foreach (var item in hits)
             {
-                if (item.transform.parent.TryGetComponent(out Resource res))
+                if (item.transform.parent.TryGetComponent(out Resource resource))
                 {
-                    Destroy(res.gameObject);
                     Bag.AddResource();
+                    resource.DestroyResource();
                 }
 
                 if (item.transform.root.TryGetComponent(out DumpSite dumpSite))
@@ -58,7 +65,7 @@ namespace RudnTest
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, _pickupRadius);
+            Gizmos.DrawWireSphere(transform.position + (Vector3.up * _pickupOffsetY), _pickupRadius);
         }
 #endif
     }

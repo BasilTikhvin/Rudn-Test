@@ -18,12 +18,12 @@ namespace RudnTest
 
         private void OnEnable()
         {
-            _dumpSite.ResourceChange += ResourceChange;
+            _dumpSite.OnResourceAmountChange += ResourceChange;
         }
 
         private void OnDestroy()
         {
-            _dumpSite.ResourceChange -= ResourceChange;
+            _dumpSite.OnResourceAmountChange -= ResourceChange;
         }
 
         private void ResourceChange(int amount)

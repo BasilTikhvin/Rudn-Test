@@ -5,11 +5,10 @@ namespace RudnTest
 {
     public class CameraTracker : MonoBehaviour
     {
+        [SerializeField] Vector2 _cameraOffset;
         [SerializeField] float _cameraDistance;
         [SerializeField] float _cameraHeight;
         [SerializeField] float _rotationSpeed;
-
-        //Vector3 _cameraOffset;
 
         Character _playerCharacter;
 
@@ -21,35 +20,28 @@ namespace RudnTest
 
         private void Start()
         {
-            Vector3 desiredPosition = _playerCharacter.transform.position - _playerCharacter.transform.forward * _cameraDistance;
-            desiredPosition.y = _playerCharacter.transform.position.y + _cameraHeight;
-            transform.position = desiredPosition;
+            Vector3 targetPosition = _playerCharacter.transform.position - _playerCharacter.transform.forward * _cameraDistance;
+            targetPosition.y = _playerCharacter.transform.position.y + _cameraHeight;
+            transform.position = targetPosition;
 
-            Vector3 lookPosition = _playerCharacter.transform.position + _playerCharacter.transform.forward * _cameraDistance;
-            transform.LookAt(lookPosition);
+            RotateCamera();
         }
 
         private void LateUpdate()
         {
-            //SetCameraOffset();
+            MoveCamera();
             RotateCamera();
         }
 
-        //private void SetCameraOffset()
-        //{
-        //    _cameraOffset = -_character.forward * _cameraDistance;
-        //    _cameraOffset.y = _cameraHeight;
-
-
-        //    transform.position = _character.position + _cameraOffset;
-        //}
+        private void MoveCamera()
+        {
+            Vector3 targetPosition = _playerCharacter.transform.position - _playerCharacter.transform.forward * _cameraDistance;
+            targetPosition.y = _playerCharacter.transform.position.y + _cameraHeight;
+            transform.position = Vector3.Lerp(transform.position, targetPosition, _rotationSpeed * Time.deltaTime);
+        }
 
         private void RotateCamera()
         {           
-            Vector3 desiredPosition = _playerCharacter.transform.position - _playerCharacter.transform.forward * _cameraDistance;
-            desiredPosition.y = _playerCharacter.transform.position.y + _cameraHeight;
-            transform.position = Vector3.Lerp(transform.position, desiredPosition, _rotationSpeed * Time.deltaTime);
-
             Vector3 lookPosition = _playerCharacter.transform.position + _playerCharacter.transform.forward * _cameraDistance;
             transform.LookAt(lookPosition);
         }
