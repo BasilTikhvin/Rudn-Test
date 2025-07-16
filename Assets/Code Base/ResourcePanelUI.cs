@@ -1,12 +1,20 @@
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 namespace RudnTest
 {
     public class ResourcePanelUI : MonoBehaviour
     {
-        [SerializeField] DumpSite _dumpSite;
         [SerializeField] TextMeshProUGUI _resourceText;
+
+        DumpSite _dumpSite;
+
+        [Inject]
+        public void Construct(DumpSite dumpSite)
+        {
+            _dumpSite = dumpSite;
+        }
 
         private void OnEnable()
         {

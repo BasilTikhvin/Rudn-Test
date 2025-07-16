@@ -1,5 +1,8 @@
+using System;
+
 namespace RudnTest
 {
+    [Serializable]
     public class Bag
     {
         public int ResourceAmount { get; private set; }

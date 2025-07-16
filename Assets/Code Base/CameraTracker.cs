@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 namespace RudnTest
 {
@@ -7,17 +8,24 @@ namespace RudnTest
         [SerializeField] float _cameraDistance;
         [SerializeField] float _cameraHeight;
         [SerializeField] float _rotationSpeed;
-        [SerializeField] Transform _character;
 
         //Vector3 _cameraOffset;
 
+        Character _playerCharacter;
+
+        [Inject]
+        public void Construct(Character playerCharacter)
+        {
+            _playerCharacter = playerCharacter;
+        }
+
         private void Start()
         {
-            Vector3 desiredPosition = _character.position - _character.forward * _cameraDistance;
-            desiredPosition.y = _character.position.y + _cameraHeight;
+            Vector3 desiredPosition = _playerCharacter.transform.position - _playerCharacter.transform.forward * _cameraDistance;
+            desiredPosition.y = _playerCharacter.transform.position.y + _cameraHeight;
             transform.position = desiredPosition;
 
-            Vector3 lookPosition = _character.position + _character.forward * _cameraDistance;
+            Vector3 lookPosition = _playerCharacter.transform.position + _playerCharacter.transform.forward * _cameraDistance;
             transform.LookAt(lookPosition);
         }
 
@@ -38,11 +46,11 @@ namespace RudnTest
 
         private void RotateCamera()
         {           
-            Vector3 desiredPosition = _character.position - _character.forward * _cameraDistance;
-            desiredPosition.y = _character.position.y + _cameraHeight;
+            Vector3 desiredPosition = _playerCharacter.transform.position - _playerCharacter.transform.forward * _cameraDistance;
+            desiredPosition.y = _playerCharacter.transform.position.y + _cameraHeight;
             transform.position = Vector3.Lerp(transform.position, desiredPosition, _rotationSpeed * Time.deltaTime);
 
-            Vector3 lookPosition = _character.position + _character.forward * _cameraDistance;
+            Vector3 lookPosition = _playerCharacter.transform.position + _playerCharacter.transform.forward * _cameraDistance;
             transform.LookAt(lookPosition);
         }
     }
