@@ -20,10 +20,10 @@ namespace RudnTest
 
         private void LookRotation()
         {
-            if (Input.GetKey(KeyCode.Mouse1))
+            //if (Input.GetKey(KeyCode.Mouse1))
                 Rotation = Input.GetAxis("Mouse X");
-            else
-                Rotation = 0f;
+            //else
+            //    Rotation = 0f;
         }
     }
 }

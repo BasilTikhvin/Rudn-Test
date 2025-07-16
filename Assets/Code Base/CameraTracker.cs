@@ -9,7 +9,17 @@ namespace RudnTest
         [SerializeField] float _rotationSpeed;
         [SerializeField] Transform _character;
 
-        Vector3 _cameraOffset;
+        //Vector3 _cameraOffset;
+
+        private void Start()
+        {
+            Vector3 desiredPosition = _character.position - _character.forward * _cameraDistance;
+            desiredPosition.y = _character.position.y + _cameraHeight;
+            transform.position = desiredPosition;
+
+            Vector3 lookPosition = _character.position + _character.forward * _cameraDistance;
+            transform.LookAt(lookPosition);
+        }
 
         private void LateUpdate()
         {
@@ -30,10 +40,10 @@ namespace RudnTest
         {           
             Vector3 desiredPosition = _character.position - _character.forward * _cameraDistance;
             desiredPosition.y = _character.position.y + _cameraHeight;
+            transform.position = Vector3.Lerp(transform.position, desiredPosition, _rotationSpeed * Time.deltaTime);
 
-            transform.position = Vector3.Lerp(transform.position,desiredPosition,_rotationSpeed * Time.deltaTime);
-
-            transform.LookAt(_character);
+            Vector3 lookPosition = _character.position + _character.forward * _cameraDistance;
+            transform.LookAt(lookPosition);
         }
     }
 }
