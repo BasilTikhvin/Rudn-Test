@@ -1,16 +1,17 @@
-using UnityEngine;
-
-public class Bag
+namespace RudnTest
 {
-    public int ResourceAmount { get; private set; }
-
-    public void AddResource()
+    public class Bag
     {
-        ResourceAmount += 1;
-    }
+        public int ResourceAmount { get; private set; }
 
-    public void RemoveResource()
-    {
-        ResourceAmount = 0;
+        public void AddResource()
+        {
+            ResourceAmount += 1;
+        }
+
+        public void RemoveResource()
+        {
+            ResourceAmount = 0;
+        }
     }
 }

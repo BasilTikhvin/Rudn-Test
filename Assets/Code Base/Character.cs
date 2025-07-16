@@ -7,7 +7,7 @@ namespace RudnTest
         [SerializeField] float _moveSpeed;
         [SerializeField] float _rotationSpeed;
         [SerializeField] float _pickupRadius;
-        [SerializeField] LayerMask _resourceLayer;
+        //[SerializeField] LayerMask _resourceLayer;
         
         public Bag Bag { get; private set; }
 
@@ -40,7 +40,8 @@ namespace RudnTest
 
         private void FindResource()
         {
-            Collider[] hits = Physics.OverlapSphere(transform.position, _pickupRadius, _resourceLayer);
+            //Collider[] hits = Physics.OverlapSphere(transform.position, _pickupRadius, _resourceLayer);
+            Collider[] hits = Physics.OverlapSphere(transform.position, _pickupRadius);
 
             foreach (var item in hits)
             {
@@ -48,6 +49,12 @@ namespace RudnTest
                 {
                     Destroy(res.gameObject);
                     Bag.AddResource();
+                    Debug.Log(Bag.ResourceAmount);
+                }
+
+                if (item.transform.root.TryGetComponent(out DumpSite dumpSite))
+                {
+                    Bag.RemoveResource();
                     Debug.Log(Bag.ResourceAmount);
                 }
             }
