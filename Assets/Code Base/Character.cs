@@ -7,16 +7,15 @@ namespace RudnTest
         [SerializeField] float _moveSpeed;
         [SerializeField] float _rotationSpeed;
         [SerializeField] float _pickupRadius;
-        //[SerializeField] LayerMask _resourceLayer;
-        
+
+        public CharacterInput CharacterInput { get; private set; }
         public Bag Bag { get; private set; }
 
-        CharacterInput _characterInput;
         float _rotation;
 
         private void Awake()
         {
-            _characterInput = GetComponentInChildren<CharacterInput>();
+            CharacterInput = GetComponentInChildren<CharacterInput>();
             Bag = new Bag();
         }
 
@@ -24,23 +23,22 @@ namespace RudnTest
         {
             Move();
             Rotate();
-            FindResource();
+            OverlapCollision();
         }
 
         private void Move()
         {
-            transform.Translate(_characterInput.Direction.normalized * _moveSpeed * Time.deltaTime);
+            transform.Translate(CharacterInput.Direction.normalized * _moveSpeed * Time.deltaTime);
         }
 
         private void Rotate()
         {
-            _rotation += _characterInput.Rotation * _rotationSpeed * Time.deltaTime;
+            _rotation += CharacterInput.Rotation * _rotationSpeed * Time.deltaTime;
             transform.rotation = Quaternion.Euler(0f, _rotation, 0f);
         }
 
-        private void FindResource()
+        private void OverlapCollision()
         {
-            //Collider[] hits = Physics.OverlapSphere(transform.position, _pickupRadius, _resourceLayer);
             Collider[] hits = Physics.OverlapSphere(transform.position, _pickupRadius);
 
             foreach (var item in hits)
@@ -49,14 +47,10 @@ namespace RudnTest
                 {
                     Destroy(res.gameObject);
                     Bag.AddResource();
-                    Debug.Log(Bag.ResourceAmount);
                 }
 
                 if (item.transform.root.TryGetComponent(out DumpSite dumpSite))
-                {
                     dumpSite.AddResource(Bag);
-                    Debug.Log(Bag.ResourceAmount);
-                }
             }
         }
 

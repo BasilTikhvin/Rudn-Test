@@ -13,6 +13,12 @@ namespace RudnTest
             LookRotation();
         }
 
+        public void DisableInput()
+        {
+            ResetInput();
+            enabled = false;
+        }
+
         private void MoveDirectionInput()
         {
             Direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
@@ -20,10 +26,13 @@ namespace RudnTest
 
         private void LookRotation()
         {
-            //if (Input.GetKey(KeyCode.Mouse1))
-                Rotation = Input.GetAxis("Mouse X");
-            //else
-            //    Rotation = 0f;
+            Rotation = Input.GetAxis("Mouse X");
+        }
+
+        private void ResetInput()
+        {
+            Direction = Vector3.zero;
+            Rotation = 0f;
         }
     }
 }
