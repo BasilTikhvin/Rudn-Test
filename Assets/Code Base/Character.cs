@@ -54,7 +54,7 @@ namespace RudnTest
 
                 if (item.transform.root.TryGetComponent(out DumpSite dumpSite))
                 {
-                    Bag.RemoveResource();
+                    dumpSite.AddResource(Bag);
                     Debug.Log(Bag.ResourceAmount);
                 }
             }
